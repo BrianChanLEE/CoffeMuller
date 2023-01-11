@@ -2,19 +2,23 @@ import axios from "axios";
 
 const API_URL = "http://coffeemuller.cafe24app.com/api/auth/";
 
-const register = (username, email, password) => {
+const register = (Name, Email, Pwd, Longitude, Latitude, Mobile) => {
     return axios.post(API_URL + "signup", {
-        username,
-        email,
-        password,
+        Name,
+        Email,
+        Pwd,
+        Longitude,
+        Latitude,
+        Mobile,
     });
 };
 
-const login = (username, password) => {
+const login = (Name, Email, Pwd) => {
     return axios
         .post(API_URL + "signin", {
-            username,
-            password,
+            Name,
+            Email,
+            Pwd,
         })
         .then((response) => {
             if (response.data.accessToken) {
@@ -29,8 +33,10 @@ const logout = () => {
     localStorage.removeItem("user");
 };
 
-export default {
+const auths = {
     register,
     login,
-    logout,
-};
+    logout
+}
+
+export default auths
