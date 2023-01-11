@@ -1,8 +1,17 @@
+//Register
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
 
+//NOTICE
+export const CREATE_NOTICE = "CREATE_NOTICE";
+export const RETRIEVE_NOTICES = "RETRIEVE_NOTICES";
+export const UPDATE_NOTICE = "UPDATE_NOTICE";
+export const DELETE_NOTICE = "DELETE_NOTICE";
+export const DELETE_ALL_NOTICES = "DELETE_ALL_NOTICES";
+
+//Message
 export const SET_MESSAGE = "SET_MESSAGE";
 export const CLEAR_MESSAGE = "CLEAR_MESSAGE";

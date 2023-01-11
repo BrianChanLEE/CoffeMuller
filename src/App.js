@@ -12,6 +12,10 @@ import Profile from "./components/Auth/profile.component";
 import BoardUser from "./components/Auth/board-user.component";
 import BoardModerator from "./components/Auth/board-moderator.component";
 import BoardAdmin from "./components/Auth/board-admin.component";
+import Notice from "./components/Notice/notice.component";
+import AddNotice from "./components/Notice/add-notice.component";
+import NoticesList from "./components/Notice/notices-list.component";
+
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -58,6 +62,12 @@ const App = () => {
                         </Link>
                     </li>
 
+                    <li className="nav-item">
+                        <Link to={"/Notices"} className="nav-link">
+                            Notices
+                        </Link>
+                    </li>
+
                     {showModeratorBoard && (
                         <li className="nav-item">
                             <Link to={"/mod"} className="nav-link">
@@ -71,6 +81,13 @@ const App = () => {
                             <Link to={"/admin"} className="nav-link">
                                 Admin Board
                             </Link>
+                        </li>
+
+                    ) && (
+                        <li className="nav-item">
+                        <Link to={"/add"} className="nav-link">
+                        Add
+                        </Link>
                         </li>
                     )}
 
@@ -118,6 +135,9 @@ const App = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/Notices" element={<NoticesList />} />
+                    <Route path="/add" element={<AddNotice/>} />
+                    <Route path="/Notices/:id" element={<Notice />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/user" element={<BoardUser />} />
