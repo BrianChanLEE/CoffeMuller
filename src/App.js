@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, } from "react-router-dom";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 
 import Login from "./pages/Auth/login.component";
 import Register from "./pages/Auth/register.component";
@@ -25,6 +27,7 @@ import EventBus from "./common/eventBus";
 const App = () => {
     // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
     const [showAdminBoard, setShowAdminBoard] = useState(false);
+    const [isLoggedIn, setisLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState(undefined);
 
     useEffect(() => {
@@ -34,6 +37,7 @@ const App = () => {
             setCurrentUser(user);
             // setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
             setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+            setisLoggedIn(user)
         }
 
         EventBus.on("logout", () => {
@@ -46,7 +50,7 @@ const App = () => {
     }, []);
 
     const logOut = () => {
-        AuthService.logOut()
+        AuthService.logout()
         // setShowModeratorBoard(false);
         setShowAdminBoard(false);
         setCurrentUser(undefined);
@@ -64,6 +68,11 @@ const App = () => {
                             Home
                         </Link>
                     </li>
+
+                    {isLoggedIn &&
+                    <>
+                    </>
+                    }
 
                     {/*<li className="nav-item">*/}
                     {/*    <Link to={"/Notices"} className="nav-link">*/}
@@ -103,14 +112,6 @@ const App = () => {
                             </Link>
                         </li>
 
-                    )&&(
-                        <div>
-                        <li className="nav-item">
-                            <Link to={"/Notices"} className="nav-link">
-                                Notice
-                            </Link>
-                        </li>
-                        
                     )
                     }
                 </div>

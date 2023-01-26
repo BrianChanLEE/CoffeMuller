@@ -24,7 +24,7 @@ instance.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-g
+
 instance.interceptors.response.use(
     (res) => {
         return res;
@@ -43,7 +43,7 @@ instance.interceptors.response.use(
 
                     const {accessToken} = rs.data;
                     TokenService.updateLocalAccessToken(accessToken);
-                    return instance(orginalConfig);
+                    return instance(originalConfig);
                 } catch (_error) {
                     return Promise.reject(_error);
 

@@ -1,5 +1,4 @@
 import React, { useState} from "react";
-import { useDispatch } from "react-redux";
 import NoticeService from "../../services/Notice/Notice.Service";
 
 
@@ -12,32 +11,35 @@ const AddNotice = () => {
         EndDate: "",
         published: false
     };
-    const [Notice, setNotice] = useState(initialNoticeState);
+    const [notice, setNotice] = useState(initialNoticeState);
     const [submitted, setSubmitted] = useState(false);
 
-    const dispatch = useDispatch();
 
     const handleInputChange = event => {
         const { name, value } = event.target;
-        setNotice({ ...Notice, [name]: value });
+        setNotice({ ...notice, [name]: value });
     };
 
     const saveNotice = () => {
-        const { Subject, Contents, StartDate, EndDate} = Notice;
+        let data = {
+            Subject: notice.Subject,
+            Contents: notice.Contents,
+            StartDate: notice.StartDate,
+            EndDate: notice.EndDate
+        };
 
-        NoticeService.createNotice(Subject, Contents, StartDate, EndDate)
-            .then(data => {
+        NoticeService.create(data)
+            .then(response => {
                 setNotice({
-                    id: data.id,
-                    Subject: data.Subject,
-                    Contents: data.Contents,
-                    StartDate: data.StartDate,
-                    EndDate: data.EndDate,
-                    published: data.published
+                    id: response.data.id,
+                    Subject: response.data.Subject,
+                    Contents: response.data.Contents,
+                    StartDate: response.data.StartDate,
+                    EndDate: response.data.EndDate,
+                    published: response.data.published
                 });
                 setSubmitted(true);
-
-                console.log(data);
+                console.log(response.data);
             })
             .catch(e => {
                 console.log(e);
@@ -53,47 +55,47 @@ const AddNotice = () => {
         <div className="submit-form">
             {submitted ? (
                 <div>
-                    <h4>You submitted successfully!</h4>
+                    <h4>성공적으로 추가했습니다!</h4>
                     <button className="btn btn-success" onClick={newNotice}>
-                        Add
+                        추가
                     </button>
                 </div>
             ) : (
                 <div>
                     <div className="form-group">
-                        <label htmlFor="Subject">Subject</label>
+                        <label htmlFor="Subject">주제</label>
                         <input
                             type="text"
                             className="form-control"
                             id="Subject"
                             required
-                            value={Notice.Subject}
+                            value={notice.Subject}
                             onChange={handleInputChange}
                             name="Subject"
                         />
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="Contents">Contents</label>
+                        <label htmlFor="Contents">컨텐츠</label>
                         <input
                             type="text"
                             className="form-control"
                             id="Contents"
                             required
-                            value={Notice.Contents}
+                            value={notice.Contents}
                             onChange={handleInputChange}
                             name="Contents"
                         />
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="StartDate">StartDate</label>
+                        <label htmlFor="StartDate">시작일자</label>
                         <input
                             type="datetime-local"
                             className="form-control"
                             id="StartDate"
                             required
-                            value={Notice.StartDate}
+                            value={notice.StartDate}
                             onChange={handleInputChange}
                             name="StartDate"
                         />
@@ -102,13 +104,13 @@ const AddNotice = () => {
 
 
                     <div className="form-group">
-                        <label htmlFor="EndDate">EndDate</label>
+                        <label htmlFor="EndDate">종료일자</label>
                         <input
                             type="datetime-local"
                             className="form-control"
                             id="EndDate"
                             required
-                            value={Notice.EndDate}
+                            value={notice.EndDate}
                             onChange={handleInputChange}
                             name="EndDate"
                         />
@@ -117,7 +119,7 @@ const AddNotice = () => {
 
 
                     <button onClick={saveNotice} className="btn btn-success">
-                        Submit
+                        추가하기
                     </button>
                 </div>
             )}
