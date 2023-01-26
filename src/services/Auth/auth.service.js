@@ -1,52 +1,42 @@
+import TokenService from "../Token/token.service";
+import api from "../Token/api";
 
 
-const API_URL = "http://coffeemuller.cafe24app.com/api/auth/";
+class AuthService {
+    login(Name, Email, Pwd) {
+        return api
+            .post("/auth/signin", {
+                Name,
+                Email,
+                Pwd,
+            })
+            .then((response) => {
+                if (response.data.accessToken) {
+                    TokenService.setUser(response.data);
+                }
+                return response.data;
+            });
+    };
 
-const register = (Name, Email, Pwd, Longitude, Latitude, Mobile) => {
-    return axios.post(API_URL + "signup", {
-        Name,
-        Email,
-        Pwd,
-        Longitude,
-        Latitude,
-        Mobile,
-    });
-};
+    logout() {
+        TokenService.removeUser();
+    }
 
-const login = (Name, Email, Pwd) => {
-    return axios
-        .post(API_URL + "signin", {
+    register(Name, Email, Pwd, Longitude, Latitude, Mobile) {
+        return api.post("/auth/signup", {
             Name,
             Email,
             Pwd,
-        })
-        .then((response) => {
-            if (response.data.accessToken) {
-                localStorage.setItem("user", JSON.stringify(response.data));
-            }
-
-            return response.data;
+            Longitude,
+            Latitude,
+            Mobile,
         });
-};
+    };
 
-const logOut = () => {
-    localStorage.removeItem("user");
-    return axios.post(API_URL + "signout").then((response) => {
-        return response.data;
-    });
-};
-
-
-const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
-};
-
-
-const AuthService = {
-    register,
-    login,
-    logOut,
-    getCurrentUser,
+    getCurrentUser() {
+        return TokenService.getUser();
+    };
 }
+
 
 export default AuthService;
