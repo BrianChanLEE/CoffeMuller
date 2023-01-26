@@ -1,29 +1,23 @@
-import axios from "axios";
-import authHeader from "./auth-header";
+import api from "../Token/api";
 
-const API_URL = "http://coffeemuller.cafe24app.com/api/test/";
+class UserService {
+    getPublicContent() {
+        return api.get("/test/all");
+    };
 
-const getPublicContent = () => {
-    return axios.get(API_URL + "all");
-};
+    getUserBoard() {
+        return api.get("/test/user");
+    };
 
-const getUserBoard = () => {
-    return axios.get(API_URL + "user", {headers: authHeader()});
-};
+    getModeratorBoard() {
+        return api.get("/test/mod");
+    };
 
-const getModeratorBoard = () => {
-    return axios.get(API_URL + "mod", {headers: authHeader()});
-};
+    getAdminBoard() {
+        return api.get("/test/admin");
+    };
 
-const getAdminBoard = () => {
-    return axios.get(API_URL + "admin", {headers: authHeader()});
-};
-
-const userServ = {
-    getPublicContent,
-    getUserBoard,
-    getModeratorBoard,
-    getAdminBoard,
 }
 
-export default userServ;
+
+export default UserService;

@@ -7,22 +7,25 @@ import {
 } from "../../actions/notice";
 import {Link} from "react-router-dom";
 
+
 const NoticesList = () => {
     const [currentNotice, setCurrentNotice] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [searchSubject, setSearchSubject] = useState("");
 
-    const Notices = useSelector(state => state.Notices);
+    const notices = useSelector(state => state.notices);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(retrieveNotices());
+        dispatch(retrieveNotices);
     }, []);
 
     const onChangeSearchSubject = e => {
         const searchSubject = e.target.value;
         setSearchSubject(searchSubject);
+
     };
+    console.log(onChangeSearchSubject)
 
     const refreshData = () => {
         setCurrentNotice(null);
@@ -30,7 +33,7 @@ const NoticesList = () => {
     };
 
     const setActiveNotice = (notice, index) => {
-        setCurrentNotice(Notices);
+        setCurrentNotice(notice);
         setCurrentIndex(index);
     };
 
@@ -76,8 +79,8 @@ const NoticesList = () => {
                 <h4>Notice List</h4>
 
                 <ul className="list-group">
-                    {Notices &&
-                        Notices.map((notice, index) => (
+                    {notices &&
+                        notices.map((notice, index) => (
                             <li
                                 className={
                                     "list-group-item " + (index === currentIndex ? "active" : "")

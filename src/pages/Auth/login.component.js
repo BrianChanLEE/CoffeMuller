@@ -1,13 +1,11 @@
-import React, {useRef, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {Navigate, useNavigate} from "react-router-dom";
-
+import React, {useState, useRef} from "react";
+import {useNavigate} from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
+import AuthService from "../../services/Auth/auth.service";
 
-import {login} from "../../actions/auth";
 
 const required = (value) => {
     if (!value) {
@@ -19,21 +17,19 @@ const required = (value) => {
     }
 };
 
-const Login = (props) => {
-    let navigate = useNavigate();
-
+const Login = () => {
     const form = useRef();
     const checkBtn = useRef();
 
     const [Name, setName] = useState("");
     const [Email, setEmail] = useState("");
     const [Pwd, setPwd] = useState("");
+    const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const {isLoggedIn} = useSelector(state => state.auth);
-    const {message} = useSelector(state => state.message);
 
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
 
     const onChangeName = (e) => {
         const Name = e.target.value;
@@ -52,28 +48,34 @@ const Login = (props) => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-
+        setMessage("");
         setLoading(true);
 
         form.current.validateAll();
 
         if (checkBtn.current.context._errors.length === 0) {
-            dispatch(login(Name, Email, Pwd))
+            AuthService.login(Name, Email, Pwd)
                 .then(() => {
-                    navigate("/profile");
-                    window.location.reload();
-                })
-                .catch(() => {
-                    setLoading(false);
-                })
+                        navigate("/profile");
+                        window.location.reload();
+                    },
+                    (error) => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+
+                        setLoading(false);
+                        setMessage(resMessage);
+                    }
+                );
         } else {
             setLoading(false);
         }
     };
 
-    if (isLoggedIn) {
-        return <Navigate to="/profile" />;
-    }
 
     return (
         <div className="col-md-12">

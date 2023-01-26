@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { useDispatch } from "react-redux";
-import { createNotice } from "../../actions/notice";
+import NoticeService from "../../services/Notice/Notice.Service";
+
 
 const AddNotice = () => {
-    const initialTutorialState = {
+    const initialNoticeState = {
         id: null,
         Subject: "",
         Contents: "",
@@ -11,7 +12,7 @@ const AddNotice = () => {
         EndDate: "",
         published: false
     };
-    const [Notice, setNotice] = useState(initialTutorialState);
+    const [Notice, setNotice] = useState(initialNoticeState);
     const [submitted, setSubmitted] = useState(false);
 
     const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const AddNotice = () => {
     const saveNotice = () => {
         const { Subject, Contents, StartDate, EndDate} = Notice;
 
-        dispatch(createNotice(Subject, Contents, StartDate, EndDate))
+        NoticeService.createNotice(Subject, Contents, StartDate, EndDate)
             .then(data => {
                 setNotice({
                     id: data.id,
@@ -44,7 +45,7 @@ const AddNotice = () => {
     };
 
     const newNotice = () => {
-        setNotice(initialTutorialState);
+        setNotice(initialNoticeState);
         setSubmitted(false);
     };
 
@@ -121,6 +122,7 @@ const AddNotice = () => {
                 </div>
             )}
         </div>
+
 );
 };
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 import UserService from "../../services/Auth/user.service";
+import EventBus from "../../common/eventBus";
 
-const BoardUser = () => {
+const AdminUser = () => {
     const [content, setContent] = useState("");
 
     useEffect(() => {
@@ -19,6 +20,9 @@ const BoardUser = () => {
                     error.toString();
 
                 setContent(_content);
+                if (error.response && error.response.status === 401) {
+                    EventBus.dispatch("logout");
+                }
             }
         );
     }, []);
@@ -32,4 +36,4 @@ const BoardUser = () => {
     );
 };
 
-export default BoardUser;
+export default AdminUser;

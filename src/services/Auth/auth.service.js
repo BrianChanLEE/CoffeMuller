@@ -1,4 +1,4 @@
-import axios from "axios";
+
 
 const API_URL = "http://coffeemuller.cafe24app.com/api/auth/";
 
@@ -29,14 +29,24 @@ const login = (Name, Email, Pwd) => {
         });
 };
 
-const logout = () => {
+const logOut = () => {
     localStorage.removeItem("user");
+    return axios.post(API_URL + "signout").then((response) => {
+        return response.data;
+    });
 };
 
-const auths = {
+
+const getCurrentUser = () => {
+    return JSON.parse(localStorage.getItem("user"));
+};
+
+
+const AuthService = {
     register,
     login,
-    logout
+    logOut,
+    getCurrentUser,
 }
 
-export default auths
+export default AuthService;

@@ -1,53 +1,56 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
-
-// import "../../coffeemuller_front//bootstrap/dist/css/bootstrap.min.css";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Link, } from "react-router-dom";
 import "./App.css";
 
-import Login from "./components/Auth/login.component";
-import Register from "./components/Auth/register.component";
-import Home from "./components/Auth/home.component";
-import Profile from "./components/Auth/profile.component";
-import BoardUser from "./components/Auth/board-user.component";
-import BoardModerator from "./components/Auth/board-moderator.component";
-import BoardAdmin from "./components/Auth/board-admin.component";
-import Notice from "./components/Notice/notice.component";
-import AddNotice from "./components/Notice/add-notice.component";
-import NoticesList from "./components/Notice/notices-list.component";
+import Login from "./pages/Auth/login.component";
+import Register from "./pages/Auth/register.component";
+import Home from "./pages/Auth/home.component";
+import Profile from "./pages/Auth/profile.component";
+import BoardUser from "./pages/Auth/board-user.component";
+import BoardModerator from "./pages/Auth/board-moderator.component";
+import BoardAdmin from "./pages/Auth/board-admin.component";
+import Notice from "./pages/Notice/notice.component";
+import AddNotice from "./pages/Notice/add-notice.component";
+// import NoticesList from "./pages/Notice/notices-list.component";
+import NoticesTabel from "./pages/Notice/notices-Table.component";
 
 
-import { logout } from "./actions/auth";
-import { clearMessage } from "./actions/message";
+
+
+import AuthService from "./services/Auth/auth.service";
+import EventBus from "./common/eventBus";
+
+
 
 const App = () => {
-    const [showModeratorBoard, setShowModeratorBoard] = useState(false);
+    // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
     const [showAdminBoard, setShowAdminBoard] = useState(false);
-
-    const { user: currentUser } = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
-
-    let location = useLocation();
+    const [currentUser, setCurrentUser] = useState(undefined);
 
     useEffect(() => {
-        if (["/login", "/register"].includes(location.pathname)) {
-            dispatch(clearMessage()); // clear message when changing location
-        }
-    }, [dispatch, location]);
+        const user = AuthService.getCurrentUser();
 
-    const logOut = useCallback(() => {
-        dispatch(logout());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (currentUser) {
-            setShowModeratorBoard(currentUser.roles.includes("ROLE_MODERATOR"));
-            setShowAdminBoard(currentUser.roles.includes("ROLE_ADMIN"));
-        } else {
-            setShowModeratorBoard(false);
-            setShowAdminBoard(false);
+        if (user) {
+            setCurrentUser(user);
+            // setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
+            setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
         }
-    }, [currentUser]);
+
+        EventBus.on("logout", () => {
+            logOut();
+        });
+
+        return () => {
+            EventBus.remove("logout");
+        };
+    }, []);
+
+    const logOut = () => {
+        AuthService.logOut()
+        // setShowModeratorBoard(false);
+        setShowAdminBoard(false);
+        setCurrentUser(undefined);
+    };
 
     return (
         <div>
@@ -62,19 +65,20 @@ const App = () => {
                         </Link>
                     </li>
 
-                    <li className="nav-item">
-                        <Link to={"/Notices"} className="nav-link">
-                            Notices
-                        </Link>
-                    </li>
+                    {/*<li className="nav-item">*/}
+                    {/*    <Link to={"/Notices"} className="nav-link">*/}
+                    {/*        Notice*/}
+                    {/*    </Link>*/}
+                    {/*</li>*/}
 
-                    {showModeratorBoard && (
-                        <li className="nav-item">
-                            <Link to={"/mod"} className="nav-link">
-                                Moderator Board
-                            </Link>
-                        </li>
-                    )}
+                    {/*{showModeratorBoard && (*/}
+                    {/*    <li className="nav-item">*/}
+                    {/*        <Link to={"/mod"} className="nav-link">*/}
+                    {/*            Moderator Board*/}
+                    {/*        </Link>*/}
+                    {/*    </li>*/}
+
+                    {/*)}*/}
 
                     {showAdminBoard && (
                         <li className="nav-item">
@@ -83,12 +87,13 @@ const App = () => {
                             </Link>
                         </li>
 
-                    ) && (
+                    )&&(
                         <li className="nav-item">
                         <Link to={"/add"} className="nav-link">
                         Add
                         </Link>
                         </li>
+
                     )}
 
                     {currentUser && (
@@ -97,16 +102,28 @@ const App = () => {
                                 User
                             </Link>
                         </li>
-                    )}
+
+                    )&&(
+                        <div>
+                        <li className="nav-item">
+                            <Link to={"/Notices"} className="nav-link">
+                                Notice
+                            </Link>
+                        </li>
+                        
+                    )
+                    }
                 </div>
+
 
                 {currentUser ? (
                     <div className="navbar-nav ml-auto">
                         <li className="nav-item">
                             <Link to={"/profile"} className="nav-link">
-                                {currentUser.username}
+                                {currentUser.Name}
                             </Link>
                         </li>
+
                         <li className="nav-item">
                             <a href="/login" className="nav-link" onClick={logOut}>
                                 LogOut
@@ -116,6 +133,8 @@ const App = () => {
                 ) : (
                     <div className="navbar-nav ml-auto">
                         <li className="nav-item">
+
+
                             <Link to={"/login"} className="nav-link">
                                 Login
                             </Link>
@@ -131,11 +150,12 @@ const App = () => {
             </nav>
 
             <div className="container mt-3">
-                <Routes>
+                <Routes >
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/Notices" element={<NoticesList />} />
+                    {/*<Route path="/Notices" element={<NoticesList />} />*/}
+                    <Route path="/Notices" element={<NoticesTabel />} />
                     <Route path="/add" element={<AddNotice/>} />
                     <Route path="/Notices/:id" element={<Notice />} />
                     <Route path="/register" element={<Register />} />

@@ -1,4 +1,4 @@
-import http from "../http-common";
+import http from "../Token/http-common";
 
 const getAll = () => {
     return http.get("/Notices");
@@ -24,11 +24,11 @@ const removeAll = () => {
     return http.delete(`/Notices`);
 };
 
-const findBySubject = Subject => {
-    return http.get(`/Notices?Subject=${Subject}`);
+const findBySubject = subject => {
+    return http.get(`/Notices?subject=${subject}`);
 };
 
-const TutorialService = {
+const NoticeService = {
     getAll,
     get,
     create,
@@ -38,4 +38,4 @@ const TutorialService = {
     findBySubject
 };
 
-export default TutorialService;
+export default NoticeService;
